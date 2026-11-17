@@ -1,0 +1,57 @@
+<h1>Project Overview</h1>
+
+<h2>{{ editingId ? 'Edit Project' : 'Add Project' }}</h2>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <p><label>Project code <input formControlName="code"></label></p>
+  <p><label>Project name <input formControlName="name"></label></p>
+  <p><label>Project lead <input formControlName="lead"></label></p>
+  <p><label>Start date <input type="date" formControlName="startDate"></label></p>
+  <p><label>Due date <input type="date" formControlName="dueDate"></label></p>
+  <p>
+    <label>Status
+      <select formControlName="status">
+        @for (status of statuses; track status) {
+          <option [value]="status">{{ status }}</option>
+        }
+      </select>
+    </label>
+  </p>
+  <p><label>Description <textarea formControlName="description"></textarea></label></p>
+  <button type="submit" [disabled]="busy">
+    {{ editingId ? 'Save Changes' : 'Add Project' }}
+  </button>
+  @if (editingId) {
+    <button type="button" [disabled]="busy" (click)="cancelEdit()">Cancel</button>
+  }
+</form>
+
+<p role="status">{{ message }}</p>
+
+<h2>Saved Projects</h2>
+<ul>
+  @for (project of projects; track project._id) {
+    <li>
+      {{ project.code }} · {{ project.name }} · {{ project.status }}
+      <button type="button" [disabled]="busy" (click)="view(project._id)">View</button>
+      <button type="button" [disabled]="busy" (click)="edit(project)">Edit</button>
+      <button type="button" [disabled]="busy" (click)="remove(project)">Delete</button>
+    </li>
+  } @empty {
+    <li>No projects to display.</li>
+  }
+</ul>
+
+@if (selected; as project) {
+  <section aria-labelledby="project-details">
+    <h2 id="project-details">Project Details</h2>
+    <dl>
+      <dt>Project code</dt><dd>{{ project.code }}</dd>
+      <dt>Project name</dt><dd>{{ project.name }}</dd>
+      <dt>Project lead</dt><dd>{{ project.lead }}</dd>
+      <dt>Start date</dt><dd>{{ project.startDate }}</dd>
+      <dt>Due date</dt><dd>{{ project.dueDate }}</dd>
+      <dt>Status</dt><dd>{{ project.status }}</dd>
+      <dt>Description</dt><dd>{{ project.description }}</dd>
+    </dl>
+  </section>
+}
